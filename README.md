@@ -1,2 +1,1 @@
-# Missmarie
-Childhood nickname- xrpl
+# Miss Marie
