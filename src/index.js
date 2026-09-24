@@ -14,28 +14,36 @@ client.commands = new Collection();
 client.slashCommands = new Collection();
 
 // Initializing the project
-require('./handler')(client);
+if (process.env.NODE_ENV !== 'test') {
+	require('./handler')(client);
+}
 
 // Connect to database
 const mongooseConnectionString = process.env.MONGOOSE;
 
-Levels.setURL(mongooseConnectionString);
+if (process.env.NODE_ENV !== 'test' && mongooseConnectionString) {
+	Levels.setURL(mongooseConnectionString);
+}
 
 let isXpSystemOn = true;
 
-mongoose
-	.connect(mongooseConnectionString, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
-	.then(() => {
-		console.log('Connected to db');
-	})
-	.catch((err) => {
-		console.log('Error occurred:', err);
-	});
+if (process.env.NODE_ENV !== 'test' && mongooseConnectionString) {
+	mongoose
+		.connect(mongooseConnectionString, {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		})
+		.then(() => {
+			console.log('Connected to db');
+		})
+		.catch((err) => {
+			console.log('Error occurred:', err);
+		});
+}
 
-client.login(process.env.DISCORD_TOKEN);
+if (process.env.NODE_ENV !== 'test' && process.env.DISCORD_TOKEN) {
+	client.login(process.env.DISCORD_TOKEN);
+}
 
 client.on('messageCreate', async (message) => {
 	if (message.author.bot) return;
